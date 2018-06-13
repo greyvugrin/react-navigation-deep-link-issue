@@ -1,8 +1,33 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { createStackNavigator } from 'react-navigation'
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation'
 
-const SimpleApp = createStackNavigator({
+const HomeScreen = () => (
+  <View style={styles.container}>
+    <Text>Home</Text>
+  </View>
+)
+
+const ChatScreen = ({ navigation }) => {
+  const { user } = navigation.state.params
+  console.log(user)
+  return (
+    <View style={styles.container}>
+      <Text>Chat</Text>
+      <Text>User from link: {user}</Text>
+    </View>
+  )
+}
+
+const StackExample = createStackNavigator({
+  Home: { screen: HomeScreen },
+  Chat: {
+    screen: ChatScreen,
+    path: 'chat/:user',
+  },
+})
+
+const SwitchExample = createSwitchNavigator({
   Home: { screen: HomeScreen },
   Chat: {
     screen: ChatScreen,
@@ -13,11 +38,8 @@ const SimpleApp = createStackNavigator({
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
+      <SwitchExample uriPrefix="deeplinkexample://" />
+      // <StackExample uriPrefix="deeplinkexample://" />
     )
   }
 }
@@ -25,7 +47,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
